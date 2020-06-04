@@ -114,7 +114,7 @@ export function isReadOnly() {
 function getNetworkProviderUrl(id) {
   switch (id) {
     case '1':
-      return `https://rpc.elaeth.io`
+      return `https://mainrpc.elaeth.io`
     case '3':
       return `https://rpc.elaeth.io`
     case '4':
