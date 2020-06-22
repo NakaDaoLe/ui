@@ -1,59 +1,60 @@
-import { getNetworkId } from '../web3'
-import { addressUtils } from '@0xproject/utils'
+import { getNetworkId } from "../web3";
+import { addressUtils } from "@0xproject/utils";
 
 import {
   isEncodedLabelhash,
   isDecrypted,
   decodeLabelhash,
   encodeLabelhash,
-  labelhash
-} from './labelhash'
+  labelhash,
+} from "./labelhash";
 import {
   encodeContenthash,
   decodeContenthash,
-  isValidContenthash
-} from './contents'
-import { tlds } from '../constants/tlds'
-import { normalize } from 'eth-ens-namehash'
-import { namehash } from './namehash'
+  isValidContenthash,
+} from "./contents";
+import { tlds } from "../constants/tlds";
+import { normalize } from "eth-ens-namehash";
+import { namehash } from "./namehash";
 
 //import { checkLabelHash } from '../updaters/preImageDB'
 
 const uniq = (a, param) =>
   a.filter(
-    (item, pos) => a.map(mapItem => mapItem[param]).indexOf(item[param]) === pos
-  )
+    (item, pos) =>
+      a.map((mapItem) => mapItem[param]).indexOf(item[param]) === pos
+  );
 
-const checkLabels = (...labelHashes) => labelHashes.map(hash => null)
+const checkLabels = (...labelHashes) => labelHashes.map((hash) => null);
 
 async function getEtherScanAddr() {
-  const networkId = await getNetworkId()
+  const networkId = await getNetworkId();
   switch (networkId) {
     case 1:
-    case '1':
-      return 'https://testnet.elaeth.io/'
+    case "1":
+      return "https://testnet.elaeth.io/";
     case 3:
-    case '3':
-      return 'https://testnet.elaeth.io/'
+    case "3":
+      return "https://testnet.elaeth.io/";
     case 4:
-    case '4':
-      return 'https://testnet.elaeth.io/'
+    case "4":
+      return "https://testnet.elaeth.io/";
     default:
-      return 'https://testnet.elaeth.io/'
+      return "https://testnet.elaeth.io/";
   }
 }
 
 async function ensStartBlock() {
-  const networkId = await getNetworkId()
+  const networkId = await getNetworkId();
   switch (networkId) {
     case 1:
-    case '1':
-      return 3327417
+    case "1":
+      return 1000000;
     case 3:
-    case '3':
-      return 25409
+    case "3":
+      return 25409;
     default:
-      return 0
+      return 0;
   }
 }
 
@@ -61,67 +62,67 @@ async function ensStartBlock() {
 //   labelHashes.map(labelHash => checkLabelHash(labelHash) || null)
 
 const mergeLabels = (labels1, labels2) =>
-  labels1.map((label, index) => (label ? label : labels2[index]))
+  labels1.map((label, index) => (label ? label : labels2[index]));
 
 function validateName(name) {
-  const nameArray = name.split('.')
-  const hasEmptyLabels = nameArray.filter(e => e.length < 1).length > 0
-  if (hasEmptyLabels) throw new Error('Domain cannot have empty labels')
-  const normalizedArray = nameArray.map(label => {
-    return isEncodedLabelhash(label) ? label : normalize(label)
-  })
+  const nameArray = name.split(".");
+  const hasEmptyLabels = nameArray.filter((e) => e.length < 1).length > 0;
+  if (hasEmptyLabels) throw new Error("Domain cannot have empty labels");
+  const normalizedArray = nameArray.map((label) => {
+    return isEncodedLabelhash(label) ? label : normalize(label);
+  });
   try {
-    return normalizedArray.join('.')
+    return normalizedArray.join(".");
   } catch (e) {
-    throw e
+    throw e;
   }
 }
 
 function isLabelValid(name) {
   try {
-    validateName(name)
-    if (name.indexOf('.') === -1) {
-      return true
+    validateName(name);
+    if (name.indexOf(".") === -1) {
+      return true;
     }
   } catch (e) {
-    console.log(e)
-    return false
+    console.log(e);
+    return false;
   }
 }
 
-const parseSearchTerm = term => {
-  let regex = /[^.]+$/
+const parseSearchTerm = (term) => {
+  let regex = /[^.]+$/;
 
   try {
-    validateName(term)
+    validateName(term);
   } catch (e) {
-    return 'invalid'
+    return "invalid";
   }
 
-  if (term.indexOf('.') !== -1) {
-    const termArray = term.split('.')
-    const tld = term.match(regex) ? term.match(regex)[0] : ''
+  if (term.indexOf(".") !== -1) {
+    const termArray = term.split(".");
+    const tld = term.match(regex) ? term.match(regex)[0] : "";
 
     if (tlds[tld] && tlds[tld].supported) {
-      if (tld === 'ela' && termArray[termArray.length - 2].length <= 3) {
-        return 'short'
+      if (tld === "ela" && termArray[termArray.length - 2].length <= 3) {
+        return "short";
       }
-      return 'supported'
+      return "supported";
     }
 
-    return 'unsupported'
+    return "unsupported";
   } else if (addressUtils.isAddress(term)) {
-    return 'address'
+    return "address";
   } else {
     //check if the search term is actually a tld
-    if (Object.keys(tlds).filter(tld => term === tld).length > 0) {
-      return 'tld'
+    if (Object.keys(tlds).filter((tld) => term === tld).length > 0) {
+      return "tld";
     }
-    return 'search'
+    return "search";
   }
-}
+};
 
-const emptyAddress = '0x0000000000000000000000000000000000000000'
+const emptyAddress = "0x0000000000000000000000000000000000000000";
 
 export {
   // general utils
@@ -146,5 +147,5 @@ export {
   // contents utils
   encodeContenthash,
   decodeContenthash,
-  isValidContenthash
-}
+  isValidContenthash,
+};
