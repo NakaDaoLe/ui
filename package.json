@@ -1,6 +1,6 @@
 {
   "name": "eladomains-ui-mainnet",
-  "version": "2.0.25",
+  "version": "2.0.26",
   "description": "UI components and reusable code",
   "main": "src/index.js",
   "files": [
